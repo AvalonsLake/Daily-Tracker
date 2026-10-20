@@ -54,7 +54,7 @@ export const createItem = async (title: string, time: string, location: string, 
 // Update An Item
 export const updateItem = async(
     documentId: string,
-    data: Partial<Pick<Item, "title" | "time" | "location" | "notes" | "all_day" | "finished">>
+    data: Partial<Pick<Item, "title" | "time" | "location" | "notes" | "finished">>
 ): Promise<Item> => {
     return databases.updateDocument({
     databaseId: DATABASE_ID,

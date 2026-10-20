@@ -12,8 +12,8 @@ interface Item {
     finished: boolean;
 }
 
-interface Props {
-  children: ReactNode;
+interface CardProps {
+  isVisible: boolean;
 }
 
 export default function Home() {
@@ -28,12 +28,11 @@ export default function Home() {
     const [editingTime, setEditingTime] = useState<string>("");
     const [editingLocation, setEditingLocation] = useState<string>("");
     const [editingNotes, setEditingNotes] = useState<string>("");
+    const [showNewTask, setShowNewTask] = useState<boolean>(false);
 
     // Load Tasks and items
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    {loading && <p>Loading tasks from Appwrite cloud...</p>}
-    {error && <p className="text-red-600">{error}</p>}
 
     useEffect(() => {
         listItems()
@@ -51,7 +50,6 @@ export default function Home() {
         setTime("");
         setLocation("");
         setNotes("");
-        listItems();
     }
 
 
@@ -74,7 +72,9 @@ export default function Home() {
             time: editingTime.trim(),
             location: editingLocation.trim(),
             notes: editingNotes.trim()
-        })
+        });
+        setItems((prev) => prev.map((i) => (i.$id === updated.$id ? updated : i)));
+        setEditingIndex(null);
     }
 
     const startEditing = (index: number): void => {
@@ -89,17 +89,18 @@ export default function Home() {
         setEditingIndex(null)
     }
 
-    // Hide & Show New task
-
-
     // FrontEnd stuff
     return (
         <div className="root-container">
             <div className="day-container">
                 <h1 className="header">My Day</h1>
-                <button className="showAddNewTask edit-button">Add New Item</button>
-                <div className="new-Task">
-                    <button className="hideAddNewTask delete-button ml-90 mb-2"> X</button>
+                {loading && <p>Loading tasks from Appwrite cloud...</p>}
+                {error && <p className="text-red-600">{error}</p>}
+                <button onClick={() => setShowNewTask(true)} className="showAddNewTask edit-button my-2">Add New Item</button>
+                <div className={`new-task-container ${showNewTask ? "visible" : "hidden"}`}>
+                    <button className="hideAddNewTask delete-button ml-90 mb-2" onClick={() => setShowNewTask(false)}>
+                        X
+                    </button>
                     <div className="flex flex-col mb-6">
                         <input
                             type="text"
@@ -136,9 +137,7 @@ export default function Home() {
                     <li
                     key={i.$id || index}
                     className={`flex flex-col p-4 rounded-lg shadow-md ${
-                        i.finished 
-                        ? "bg-green-100" 
-                        : "bg-gray-100"
+                        i.finished ? "bg-green-100" : "bg-gray-100"
                     } transition-all ease-in-out duration-200`}
                     >
                     <div className="flex items-center">
