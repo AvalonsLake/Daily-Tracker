@@ -1,5 +1,5 @@
 import { ID, Permission, Query, Role, type Models } from "appwrite";
-import { SPELLDATA_ID, AUTH_ID, CHARACTERS_ID, DATABASE_ID, databases } from "../lib/appwrite";
+import { SPELLDATA_ID, AUTH_ID, DATABASE_ID, databases } from "../lib/appwrite";
 
 // Templates for User & Item
 export interface User extends Models.Document {
@@ -21,7 +21,7 @@ export interface Item extends Models.Document {
 export const listItems = async (): Promise<Item[]> => {
     const response = await databases.listDocuments<Item>({
     databaseId: DATABASE_ID,
-    collectionId: CHARACTERS_ID,
+    collectionId: SPELLDATA_ID,
     queries: [Query.orderDesc("$createdAt")],
   });
   return response.documents;
@@ -30,8 +30,8 @@ export const listItems = async (): Promise<Item[]> => {
 // Create a User
 export const createUser = async (email: string, password: string): Promise<User[]> => {
     const response = await databases.createDocument({
-    databaseId: '<DATABASE_ID>',
-    collectionId: '<COLLECTION_ID>',
+    databaseId: DATABASE_ID,
+    collectionId: AUTH_ID,
     documentId: ID.unique(),
     data: { email, password },
     });
@@ -42,8 +42,8 @@ export const createUser = async (email: string, password: string): Promise<User[
 // Create An item
 export const createItem = async (title: string, time: string, location: string, notes: string): Promise<Item[]> => {
     const response = await databases.createDocument({
-    databaseId: '<DATABASE_ID>',
-    collectionId: '<COLLECTION_ID>',
+    databaseId: DATABASE_ID,
+    collectionId: SPELLDATA_ID,
     documentId: ID.unique(),
     data: { title, time, location, notes, all_day: false, finished: false },
     });

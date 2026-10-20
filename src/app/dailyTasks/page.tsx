@@ -1,5 +1,5 @@
 "use client";
-import {useState, useEffect} from "react"
+import { useState, useEffect } from "react"
 import { createItem, listItems, updateItem, deleteItem } from "../functions"
 
 interface Item {
@@ -39,7 +39,7 @@ export default function Home() {
     }, []);
 
     // Add an item
-    const addTask = async (item: Item) => {
+    const addTask = async () => {
         if (title.trim() === "" || time.trim() === "" || location.trim() === "" || notes.trim() === "") return;
         const newTask =  await createItem(title.trim(), time.trim(), location.trim(), notes.trim());
         setItems((prev) => [newTask, ...prev]);
@@ -77,6 +77,18 @@ export default function Home() {
         })
     }
 
+    const startEditing = (index: number): void => {
+        setEditingIndex(index)
+        setEditingTitle(items[index].title || "")
+        setEditingTime(items[index].time || "")
+        setEditingLocation(items[index].location || "")
+        setEditingNotes(items[index].notes || "")
+    }
+
+    const stopEditing = (): void => {
+        setEditingIndex(null)
+    }
+
     // FrontEnd stuff
     return (
         <div className="root-container">
@@ -88,29 +100,31 @@ export default function Home() {
                         <input
                             type="text"
                             className="input-field"
-                            placeholder="Task Title"
+                            placeholder="What is the title of your task?"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
                         />
                         <textarea
                             className="input-field mt-2"
-                            placeholder="Task Times"
+                            placeholder="From when to when is the task?"
                             value={time}
                             onChange={(e) => setTime(e.target.value)}
                         />
                         <textarea
                             className="input-field mt-3"
-                            placeholder="Task Details"
+                            placeholder="Where will this task take place?"
                             value={location}
                             onChange={(e) => setLocation(e.target.value)}
                         />
                         <textarea
                             className="input-field mt-4"
-                            placeholder="Task Details"
+                            placeholder="Any notes about the Task?"
                             value={notes}
                             onChange={(e) => setNotes(e.target.value)}
                         />
-                        <button onClick={addTask} className="edit-button mt-2"></button>
+                        <button onClick={addTask} className="edit-button mt-2">
+                            Add Task
+                        </button>
                     </div>
                 </div>
             </div>
