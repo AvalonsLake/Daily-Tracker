@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react"
+import { useState, useEffect} from "react"
 import { createItem, listItems, updateItem, deleteItem } from "../functions"
 
 interface Item {
@@ -89,12 +89,15 @@ export default function Home() {
         setEditingIndex(null)
     }
 
+    // Hide & Show New task
+
     // FrontEnd stuff
     return (
         <div className="root-container">
             <div className="day-container">
                 <h1 className="header">My Day</h1>
-                <button></button>
+                <button className="showAddNewTask">Add New Item</button>
+                <button className="hideAddNewTask"> X</button>
                 <div className="new-Task">
                     <div className="flex flex-col mb-6">
                         <input
@@ -111,13 +114,13 @@ export default function Home() {
                             onChange={(e) => setTime(e.target.value)}
                         />
                         <textarea
-                            className="input-field mt-3"
+                            className="input-field mt-2"
                             placeholder="Where will this task take place?"
                             value={location}
                             onChange={(e) => setLocation(e.target.value)}
                         />
                         <textarea
-                            className="input-field mt-4"
+                            className="input-field mt-2"
                             placeholder="Any notes about the Task?"
                             value={notes}
                             onChange={(e) => setNotes(e.target.value)}
@@ -127,6 +130,9 @@ export default function Home() {
                         </button>
                     </div>
                 </div>
+                <ul className="space-y-3">
+                    
+                </ul>
             </div>
         </div>
     )

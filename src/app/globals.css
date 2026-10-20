@@ -24,3 +24,16 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@layer containers {
+  .root-container {
+    @apply min-h-screen bg-gradient-to-r from-cyan-700 to-sky-900 flex flex-col items-center justify-center p-4;
+  }
+
+  .day-container {
+    @apply min-h-8/10 bg-teal-600/45 shadow-lg rounded-xl p-8 w-full max-w-md;
+  }
+  .hide {
+    @apply hidden;
+  }
+}
