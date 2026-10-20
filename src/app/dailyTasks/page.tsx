@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect} from "react"
+import { useState, useEffect, ReactNode} from "react"
 import { createItem, listItems, updateItem, deleteItem } from "../functions"
 
 interface Item {
@@ -10,6 +10,10 @@ interface Item {
     notes: string;
     all_day: boolean;
     finished: boolean;
+}
+
+interface Props {
+  children: ReactNode;
 }
 
 export default function Home() {
@@ -47,13 +51,9 @@ export default function Home() {
         setTime("");
         setLocation("");
         setNotes("");
+        listItems();
     }
 
-    // Set all day
-    const setAllDay = async (item: Item) => {
-        const updated = await updateItem(item.$id, { all_day: !item.all_day });
-        setItems((prev) => prev.map((i) => (i.$id === updated.$id ? updated : i)));
-    }
 
     // Set Finished
     const setTaskFinished = async (item: Item) => {
@@ -91,14 +91,15 @@ export default function Home() {
 
     // Hide & Show New task
 
+
     // FrontEnd stuff
     return (
         <div className="root-container">
             <div className="day-container">
                 <h1 className="header">My Day</h1>
-                <button className="showAddNewTask">Add New Item</button>
-                <button className="hideAddNewTask"> X</button>
+                <button className="showAddNewTask edit-button">Add New Item</button>
                 <div className="new-Task">
+                    <button className="hideAddNewTask delete-button ml-90 mb-2"> X</button>
                     <div className="flex flex-col mb-6">
                         <input
                             type="text"
@@ -131,7 +132,130 @@ export default function Home() {
                     </div>
                 </div>
                 <ul className="space-y-3">
-                    
+                    {items.map((i, index) => (
+                    <li
+                    key={i.$id || index}
+                    className={`flex flex-col p-4 rounded-lg shadow-md ${
+                        i.finished 
+                        ? "bg-green-100" 
+                        : "bg-gray-100"
+                    } transition-all ease-in-out duration-200`}
+                    >
+                    <div className="flex items-center">
+                        
+                        {editingIndex === index ? (
+                        <div className="flex flex-col">
+                            <input
+                            type="text"
+                            className="input-field"
+                            value={editingTitle}
+                            onChange={(e) => setEditingTitle(e.target.value)}
+                            />
+                            <input
+                            type="text"
+                            className="input-field-location"
+                            value={editingLocation}
+                            onChange={(e) => setEditingLocation(e.target.value)}
+                            />
+                            <input
+                            type="text"
+                            className="input-field-time"
+                            value={editingTime}
+                            onChange={(e) => setEditingTime(e.target.value)}
+                            />
+                            <textarea
+                            rows={4}
+                            className="input-field mt-2"
+                            value={editingNotes}
+                            onChange={(e) => setEditingNotes(e.target.value)}
+                            />
+                        </div>
+                        ) : (
+                        <div className="flex flex-col ">
+                            <h2
+                            className={`text-lg font-semibold ${
+                                i.finished
+                                ? "line-through text-gray-500"
+                                : "text-gray-900"
+                            }`}
+                            >
+                            {i.title}
+                            </h2>
+                            <p
+                            className={`align-self-end font-bold${
+                                i.finished
+                                ? "line-through text-gray-500"
+                                : "text-gray-700"
+                            }`}
+                            >
+                            {i.time}
+                            </p>
+                            <h2
+                            className={`text-lg font-semibold${
+                                i.finished
+                                ? "line-through text-gray-500"
+                                : "text-gray-900"
+                            }`}
+                            >
+                            {i.location}
+                            </h2>
+                            <p
+                            className={` ${
+                                i.finished
+                                ? "line-through text-gray-500"
+                                : "text-gray-700"
+                            }`}
+                            >
+                            {i.notes}
+                            </p>
+                        </div>
+                        )}
+                        <label className="ml-auto">Finished</label>
+                        {editingIndex !== index && (
+                        <input
+                            type="checkbox"
+                            checked={!!i.finished}
+                            onChange={() => setTaskFinished(items[index])}
+                            className="mx-2"
+                        />
+                        )}
+                    </div>
+
+                    <div className="flex mt-2">
+                        {editingIndex === index ? (
+                        <>
+                            <button
+                            onClick={() => saveTask(i.$id)}
+                            className="save-button"
+                            >
+                            Save
+                            </button>
+                            <button
+                            onClick={stopEditing}
+                            className="cancel-button ml-2"
+                            >
+                            Cancel
+                            </button>
+                        </>
+                        ) : (
+                        <>
+                            <button
+                            onClick={() => startEditing(index)}
+                            className="edit-button"
+                            >
+                            Edit
+                            </button>
+                            <button
+                            onClick={() => removeItem(i.$id)}
+                            className="delete-button ml-auto"
+                            >
+                            X
+                            </button>
+                        </>
+                        )}
+                    </div>
+                    </li>
+                ))}
                 </ul>
             </div>
         </div>

@@ -57,9 +57,9 @@ export const updateItem = async(
     data: Partial<Pick<Item, "title" | "time" | "location" | "notes" | "all_day" | "finished">>
 ): Promise<Item> => {
     return databases.updateDocument({
-    databaseId: '<DATABASE_ID>',
-    collectionId: '<COLLECTION_ID>',
-    documentId: '<DOCUMENT_ID>',
+    databaseId: DATABASE_ID,
+    collectionId: SPELLDATA_ID,
+    documentId,
     data,
 });
 }
@@ -67,8 +67,8 @@ export const updateItem = async(
 // Delete an Item
 export const deleteItem = async (documentId: string): Promise<void> => {
     await databases.deleteDocument({
-    databaseId: '<DATABASE_ID>',
-    collectionId: '<COLLECTION_ID>',
+    databaseId: DATABASE_ID,
+    collectionId: SPELLDATA_ID,
     documentId,
 });
 }

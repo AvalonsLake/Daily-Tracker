@@ -37,3 +37,20 @@ body {
     @apply hidden;
   }
 }
+
+@layer components {
+  .header {
+    @apply text-3xl font-bold mb-4 text-center text-white;
+  }
+  .input-field {
+    @apply w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-white;
+  }
+
+  .edit-button {
+    @apply bg-teal-500 text-white px-4 py-2 rounded-md hover:bg-teal-600 transition-colors;
+  }
+
+  .delete-button {
+    @apply bg-red-500 text-white px-1 rounded-md hover:bg-red-600 transition-colors;
+  }
+}
