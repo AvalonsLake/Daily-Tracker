@@ -11,6 +11,7 @@ export interface Item extends Models.Document {
     title: string;
     time: string;
     location: string;
+    notes: string;
     all_day: boolean;
     finished: boolean;
 }
@@ -39,12 +40,12 @@ export const createUser = async (email: string, password: string): Promise<User[
 
 
 // Create An item
-export const createItem = async (title: string, time: string, location: string, all_day: boolean, finished: boolean): Promise<Item[]> => {
+export const createItem = async (title: string, time: string, location: string, notes: string): Promise<Item[]> => {
     const response = await databases.createDocument({
     databaseId: '<DATABASE_ID>',
     collectionId: '<COLLECTION_ID>',
     documentId: ID.unique(),
-    data: { title, time, location, all_day, finished },
+    data: { title, time, location, notes, all_day: false, finished: false },
     });
     return response.documents;
 };
@@ -53,7 +54,7 @@ export const createItem = async (title: string, time: string, location: string, 
 // Update An Item
 export const updateItem = async(
     documentId: string,
-    data: Partial<Pick<Item, "title" | "time" | "location" | "all_day" | "finished">>
+    data: Partial<Pick<Item, "title" | "time" | "location" | "notes" | "all_day" | "finished">>
 ): Promise<Item> => {
     return databases.updateDocument({
     databaseId: '<DATABASE_ID>',
